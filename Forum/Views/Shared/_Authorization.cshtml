@@ -1,0 +1,26 @@
+﻿@using Forum.Models
+@model AuthorizationViewModel
+
+<div id="PersonalArea">
+    <div id="FormPersonalArea">
+        @using (Html.BeginForm("Authorization", "Home", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <h1>Authorization</h1>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div>
+                @Html.TextBoxFor(model => model.Login, new { placeholder = "Login", autofocus = "" })<br style="overflow: hidden;" />
+                @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.PasswordFor(model => model.Password, new { placeholder = "Password" })<br style="overflow: hidden;" />
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.CheckBoxFor(model => model.RememberMe, htmlAttributes: new { @checked = true })
+                @Html.LabelFor(model => model.RememberMe)
+            </div>
+            <input type="submit" value="Log in" />
+        }
+    </div>
+</div>

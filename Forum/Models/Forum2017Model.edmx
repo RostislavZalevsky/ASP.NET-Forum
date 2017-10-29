@@ -1,0 +1,773 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Forum2017SQLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cookie">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="bigint" Nullable="false" />
+          <Property Name="IPv4" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="SecretKey" Type="varbinary(max)" Nullable="false" />
+          <Property Name="DateOfExpiry" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EditedMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MessageId" Type="bigint" />
+          <Property Name="RepliedMessageId" Type="bigint" />
+          <Property Name="Message" Type="ntext" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Forum">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodeForum" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Topic" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Author" Type="bigint" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ForumId" Type="bigint" Nullable="false" />
+          <Property Name="UserId" Type="bigint" Nullable="false" />
+          <Property Name="Message" Type="ntext" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Notifications">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MessageId" Type="bigint" />
+          <Property Name="RepliedMessageId" Type="bigint" />
+        </EntityType>
+        <EntityType Name="RepliedMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="bigint" Nullable="false" />
+          <Property Name="MessageId" Type="bigint" />
+          <Property Name="RepliedMessageId" Type="bigint" />
+          <Property Name="Message" Type="ntext" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Avatar" Type="nvarchar(max)" />
+          <Property Name="Nickname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Salt" Type="nvarchar(max)" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Author_Forum">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Forum" Type="Self.Forum" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Forum">
+              <PropertyRef Name="Author" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForumId_Message">
+          <End Role="Forum" Type="Self.Forum" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Forum">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="ForumId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MessageId_EditedMessage">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EditedMessage" Type="Self.EditedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EditedMessage">
+              <PropertyRef Name="MessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MessageId_Notifications">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="MessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MessageId_RepliedMessage">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RepliedMessage">
+              <PropertyRef Name="MessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepliedMessageId_EditedMessage">
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="0..1" />
+          <End Role="EditedMessage" Type="Self.EditedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepliedMessage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EditedMessage">
+              <PropertyRef Name="RepliedMessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepliedMessageId_Notifications">
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="0..1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepliedMessage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="RepliedMessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepliedMessageId_RepliedMessage">
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="0..1" />
+          <End Role="RepliedMessage1" Type="Self.RepliedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepliedMessage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RepliedMessage1">
+              <PropertyRef Name="RepliedMessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Cookie">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Cookie" Type="Self.Cookie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cookie">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Message">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_RepliedMessage">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RepliedMessage">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="EditingMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="messageId" Type="bigint" Mode="In" />
+          <Parameter Name="repliedMessageId" Type="bigint" Mode="In" />
+          <Parameter Name="message" Type="ntext" Mode="In" />
+          <Parameter Name="dateCreated" Type="datetime" Mode="In" />
+          <Parameter Name="messageOld" Type="ntext" Mode="In" />
+        </Function>
+        <Function Name="GetUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bigint">
+          <Parameter Name="nickname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="IsAlreadyTakenLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bit">
+          <Parameter Name="login" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="IsAlreadyTakenNickname" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bit">
+          <Parameter Name="nickname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="NewForum" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="codeForum" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="topic" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="author" Type="nvarchar" Mode="In" />
+          <Parameter Name="dateCreated" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="NewMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="forumId" Type="bigint" Mode="In" />
+          <Parameter Name="nickname" Type="nvarchar" Mode="In" />
+          <Parameter Name="message" Type="ntext" Mode="In" />
+          <Parameter Name="dateCreated" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="Registration" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="login" Type="nvarchar" Mode="In" />
+          <Parameter Name="avatar" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="nickname" Type="nvarchar" Mode="In" />
+          <Parameter Name="password" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="salt" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="dateCreated" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="ReplyMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="nickname" Type="nvarchar" Mode="In" />
+          <Parameter Name="messageId" Type="bigint" Mode="In" />
+          <Parameter Name="replydMessageId" Type="bigint" Mode="In" />
+          <Parameter Name="message" Type="ntext" Mode="In" />
+          <Parameter Name="dateCreated" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="SetCookie" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Nickname" Type="nvarchar" Mode="In" />
+          <Parameter Name="ipv4" Type="nvarchar" Mode="In" />
+          <Parameter Name="secretKey" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="dateOfExpiry" Type="datetime" Mode="In" />
+        </Function>
+        <EntityContainer Name="Forum2017SQLModelStoreContainer">
+          <EntitySet Name="Cookie" EntityType="Self.Cookie" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EditedMessage" EntityType="Self.EditedMessage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Forum" EntityType="Self.Forum" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Message" EntityType="Self.Message" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notifications" EntityType="Self.Notifications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RepliedMessage" EntityType="Self.RepliedMessage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Author_Forum" Association="Self.FK_Author_Forum">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Forum" EntitySet="Forum" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForumId_Message" Association="Self.FK_ForumId_Message">
+            <End Role="Forum" EntitySet="Forum" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MessageId_EditedMessage" Association="Self.FK_MessageId_EditedMessage">
+            <End Role="Message" EntitySet="Message" />
+            <End Role="EditedMessage" EntitySet="EditedMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MessageId_Notifications" Association="Self.FK_MessageId_Notifications">
+            <End Role="Message" EntitySet="Message" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MessageId_RepliedMessage" Association="Self.FK_MessageId_RepliedMessage">
+            <End Role="Message" EntitySet="Message" />
+            <End Role="RepliedMessage" EntitySet="RepliedMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepliedMessageId_EditedMessage" Association="Self.FK_RepliedMessageId_EditedMessage">
+            <End Role="RepliedMessage" EntitySet="RepliedMessage" />
+            <End Role="EditedMessage" EntitySet="EditedMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepliedMessageId_Notifications" Association="Self.FK_RepliedMessageId_Notifications">
+            <End Role="RepliedMessage" EntitySet="RepliedMessage" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepliedMessageId_RepliedMessage" Association="Self.FK_RepliedMessageId_RepliedMessage">
+            <End Role="RepliedMessage" EntitySet="RepliedMessage" />
+            <End Role="RepliedMessage1" EntitySet="RepliedMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Cookie" Association="Self.FK_User_Cookie">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Cookie" EntitySet="Cookie" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Message" Association="Self.FK_User_Message">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_RepliedMessage" Association="Self.FK_User_RepliedMessage">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="RepliedMessage" EntitySet="RepliedMessage" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Forum2017SQLModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Cookie">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int64" Nullable="false" />
+          <Property Name="IPv4" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SecretKey" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="DateOfExpiry" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_Cookie" FromRole="Cookie" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="EditedMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MessageId" Type="Int64" />
+          <Property Name="RepliedMessageId" Type="Int64" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Message1" Relationship="Self.FK_MessageId_EditedMessage" FromRole="EditedMessage" ToRole="Message" />
+          <NavigationProperty Name="RepliedMessage" Relationship="Self.FK_RepliedMessageId_EditedMessage" FromRole="EditedMessage" ToRole="RepliedMessage" />
+        </EntityType>
+        <EntityType Name="Forum">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodeForum" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Topic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Author" Type="Int64" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Author_Forum" FromRole="Forum" ToRole="Users" />
+          <NavigationProperty Name="Messages" Relationship="Self.FK_ForumId_Message" FromRole="Forum" ToRole="Message" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ForumId" Type="Int64" Nullable="false" />
+          <Property Name="UserId" Type="Int64" Nullable="false" />
+          <Property Name="Message1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="EditedMessages" Relationship="Self.FK_MessageId_EditedMessage" FromRole="Message" ToRole="EditedMessage" />
+          <NavigationProperty Name="Forum" Relationship="Self.FK_ForumId_Message" FromRole="Message" ToRole="Forum" />
+          <NavigationProperty Name="Notifications" Relationship="Self.FK_MessageId_Notifications" FromRole="Message" ToRole="Notifications" />
+          <NavigationProperty Name="RepliedMessages" Relationship="Self.FK_MessageId_RepliedMessage" FromRole="Message" ToRole="RepliedMessage" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_Message" FromRole="Message" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MessageId" Type="Int64" />
+          <Property Name="RepliedMessageId" Type="Int64" />
+          <NavigationProperty Name="Message" Relationship="Self.FK_MessageId_Notifications" FromRole="Notifications" ToRole="Message" />
+          <NavigationProperty Name="RepliedMessage" Relationship="Self.FK_RepliedMessageId_Notifications" FromRole="Notifications" ToRole="RepliedMessage" />
+        </EntityType>
+        <EntityType Name="RepliedMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int64" Nullable="false" />
+          <Property Name="MessageId" Type="Int64" />
+          <Property Name="RepliedMessageId" Type="Int64" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="EditedMessages" Relationship="Self.FK_RepliedMessageId_EditedMessage" FromRole="RepliedMessage" ToRole="EditedMessage" />
+          <NavigationProperty Name="Message1" Relationship="Self.FK_MessageId_RepliedMessage" FromRole="RepliedMessage" ToRole="Message" />
+          <NavigationProperty Name="Notifications" Relationship="Self.FK_RepliedMessageId_Notifications" FromRole="RepliedMessage" ToRole="Notifications" />
+          <NavigationProperty Name="RepliedMessage1" Relationship="Self.FK_RepliedMessageId_RepliedMessage" FromRole="RepliedMessage" ToRole="RepliedMessage1" />
+          <NavigationProperty Name="RepliedMessage2" Relationship="Self.FK_RepliedMessageId_RepliedMessage" FromRole="RepliedMessage1" ToRole="RepliedMessage" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_RepliedMessage" FromRole="RepliedMessage" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Nickname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="Salt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Cookies" Relationship="Self.FK_User_Cookie" FromRole="Users" ToRole="Cookie" />
+          <NavigationProperty Name="Fora" Relationship="Self.FK_Author_Forum" FromRole="Users" ToRole="Forum" />
+          <NavigationProperty Name="Messages" Relationship="Self.FK_User_Message" FromRole="Users" ToRole="Message" />
+          <NavigationProperty Name="RepliedMessages" Relationship="Self.FK_User_RepliedMessage" FromRole="Users" ToRole="RepliedMessage" />
+        </EntityType>
+        <Association Name="FK_User_Cookie">
+          <End Role="Users" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Cookie" Type="Self.Cookie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cookie">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MessageId_EditedMessage">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EditedMessage" Type="Self.EditedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EditedMessage">
+              <PropertyRef Name="MessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepliedMessageId_EditedMessage">
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="0..1" />
+          <End Role="EditedMessage" Type="Self.EditedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepliedMessage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EditedMessage">
+              <PropertyRef Name="RepliedMessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Author_Forum">
+          <End Role="Users" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Forum" Type="Self.Forum" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Forum">
+              <PropertyRef Name="Author" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForumId_Message">
+          <End Role="Forum" Type="Self.Forum" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Forum">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="ForumId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MessageId_Notifications">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Notifications" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="MessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MessageId_RepliedMessage">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RepliedMessage">
+              <PropertyRef Name="MessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Message">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepliedMessageId_Notifications">
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="0..1" />
+          <End Role="Notifications" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepliedMessage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="RepliedMessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepliedMessageId_RepliedMessage">
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="0..1" />
+          <End Role="RepliedMessage1" Type="Self.RepliedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepliedMessage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RepliedMessage1">
+              <PropertyRef Name="RepliedMessageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_RepliedMessage">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="RepliedMessage" Type="Self.RepliedMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RepliedMessage">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Forum2017SQLEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cookies" EntityType="Self.Cookie" />
+          <EntitySet Name="EditedMessages" EntityType="Self.EditedMessage" />
+          <EntitySet Name="Fora" EntityType="Self.Forum" />
+          <EntitySet Name="Messages" EntityType="Self.Message" />
+          <EntitySet Name="Notifications" EntityType="Self.Notification" />
+          <EntitySet Name="RepliedMessages" EntityType="Self.RepliedMessage" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_User_Cookie" Association="Self.FK_User_Cookie">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Cookie" EntitySet="Cookies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MessageId_EditedMessage" Association="Self.FK_MessageId_EditedMessage">
+            <End Role="Message" EntitySet="Messages" />
+            <End Role="EditedMessage" EntitySet="EditedMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepliedMessageId_EditedMessage" Association="Self.FK_RepliedMessageId_EditedMessage">
+            <End Role="RepliedMessage" EntitySet="RepliedMessages" />
+            <End Role="EditedMessage" EntitySet="EditedMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Author_Forum" Association="Self.FK_Author_Forum">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Forum" EntitySet="Fora" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForumId_Message" Association="Self.FK_ForumId_Message">
+            <End Role="Forum" EntitySet="Fora" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MessageId_Notifications" Association="Self.FK_MessageId_Notifications">
+            <End Role="Message" EntitySet="Messages" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MessageId_RepliedMessage" Association="Self.FK_MessageId_RepliedMessage">
+            <End Role="Message" EntitySet="Messages" />
+            <End Role="RepliedMessage" EntitySet="RepliedMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Message" Association="Self.FK_User_Message">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepliedMessageId_Notifications" Association="Self.FK_RepliedMessageId_Notifications">
+            <End Role="RepliedMessage" EntitySet="RepliedMessages" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepliedMessageId_RepliedMessage" Association="Self.FK_RepliedMessageId_RepliedMessage">
+            <End Role="RepliedMessage" EntitySet="RepliedMessages" />
+            <End Role="RepliedMessage1" EntitySet="RepliedMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_RepliedMessage" Association="Self.FK_User_RepliedMessage">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="RepliedMessage" EntitySet="RepliedMessages" />
+          </AssociationSet>
+          <FunctionImport Name="EditingMessage">
+            <Parameter Name="messageId" Mode="In" Type="Int64" />
+            <Parameter Name="repliedMessageId" Mode="In" Type="Int64" />
+            <Parameter Name="message" Mode="In" Type="String" />
+            <Parameter Name="dateCreated" Mode="In" Type="DateTime" />
+            <Parameter Name="messageOld" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="NewForum">
+            <Parameter Name="codeForum" Mode="In" Type="String" />
+            <Parameter Name="topic" Mode="In" Type="String" />
+            <Parameter Name="author" Mode="In" Type="String" />
+            <Parameter Name="dateCreated" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="NewMessage">
+            <Parameter Name="forumId" Mode="In" Type="Int64" />
+            <Parameter Name="nickname" Mode="In" Type="String" />
+            <Parameter Name="message" Mode="In" Type="String" />
+            <Parameter Name="dateCreated" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="Registration">
+            <Parameter Name="login" Mode="In" Type="String" />
+            <Parameter Name="avatar" Mode="In" Type="String" />
+            <Parameter Name="nickname" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="Binary" />
+            <Parameter Name="salt" Mode="In" Type="String" />
+            <Parameter Name="dateCreated" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="ReplyMessage">
+            <Parameter Name="nickname" Mode="In" Type="String" />
+            <Parameter Name="messageId" Mode="In" Type="Int64" />
+            <Parameter Name="replydMessageId" Mode="In" Type="Int64" />
+            <Parameter Name="message" Mode="In" Type="String" />
+            <Parameter Name="dateCreated" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="SetCookie">
+            <Parameter Name="Nickname" Mode="In" Type="String" />
+            <Parameter Name="ipv4" Mode="In" Type="String" />
+            <Parameter Name="secretKey" Mode="In" Type="Binary" />
+            <Parameter Name="dateOfExpiry" Mode="In" Type="DateTime" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Forum2017SQLModelStoreContainer" CdmEntityContainer="Forum2017SQLEntities">
+          <EntitySetMapping Name="Cookies">
+            <EntityTypeMapping TypeName="Forum2017SQLModel.Cookie">
+              <MappingFragment StoreEntitySet="Cookie">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="IPv4" ColumnName="IPv4" />
+                <ScalarProperty Name="SecretKey" ColumnName="SecretKey" />
+                <ScalarProperty Name="DateOfExpiry" ColumnName="DateOfExpiry" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EditedMessages">
+            <EntityTypeMapping TypeName="Forum2017SQLModel.EditedMessage">
+              <MappingFragment StoreEntitySet="EditedMessage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="RepliedMessageId" ColumnName="RepliedMessageId" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fora">
+            <EntityTypeMapping TypeName="Forum2017SQLModel.Forum">
+              <MappingFragment StoreEntitySet="Forum">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CodeForum" ColumnName="CodeForum" />
+                <ScalarProperty Name="Topic" ColumnName="Topic" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="Forum2017SQLModel.Message">
+              <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ForumId" ColumnName="ForumId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Message1" ColumnName="Message" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="Forum2017SQLModel.Notification">
+              <MappingFragment StoreEntitySet="Notifications">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="RepliedMessageId" ColumnName="RepliedMessageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RepliedMessages">
+            <EntityTypeMapping TypeName="Forum2017SQLModel.RepliedMessage">
+              <MappingFragment StoreEntitySet="RepliedMessage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="RepliedMessageId" ColumnName="RepliedMessageId" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="Forum2017SQLModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
+                <ScalarProperty Name="Nickname" ColumnName="Nickname" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="EditingMessage" FunctionName="Forum2017SQLModel.Store.EditingMessage" />
+          <FunctionImportMapping FunctionImportName="NewForum" FunctionName="Forum2017SQLModel.Store.NewForum" />
+          <FunctionImportMapping FunctionImportName="NewMessage" FunctionName="Forum2017SQLModel.Store.NewMessage" />
+          <FunctionImportMapping FunctionImportName="Registration" FunctionName="Forum2017SQLModel.Store.Registration" />
+          <FunctionImportMapping FunctionImportName="ReplyMessage" FunctionName="Forum2017SQLModel.Store.ReplyMessage" />
+          <FunctionImportMapping FunctionImportName="SetCookie" FunctionName="Forum2017SQLModel.Store.SetCookie" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="bf5c341e2b7146068d5a3a59f25f000a" Name="Diagram1">
+        <EntityTypeShape EntityType="Forum2017SQLModel.Cookie" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Forum2017SQLModel.EditedMessage" Width="1.5" PointX="7.5" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Forum2017SQLModel.Forum" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Forum2017SQLModel.Message" Width="1.5" PointX="5.25" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Forum2017SQLModel.Notification" Width="1.5" PointX="7.5" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="Forum2017SQLModel.RepliedMessage" Width="1.5" PointX="10.5" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="Forum2017SQLModel.User" Width="1.5" PointX="0.75" PointY="5.875" IsExpanded="true" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_User_Cookie" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_MessageId_EditedMessage" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_RepliedMessageId_EditedMessage" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_Author_Forum" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_ForumId_Message" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_MessageId_Notifications" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_MessageId_RepliedMessage" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_User_Message" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_RepliedMessageId_Notifications" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_RepliedMessageId_RepliedMessage" ManuallyRouted="false" />
+        <AssociationConnector Association="Forum2017SQLModel.FK_User_RepliedMessage" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

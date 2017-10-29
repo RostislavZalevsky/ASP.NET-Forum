@@ -1,0 +1,68 @@
+﻿html {
+    font-family: 'CENTURE GOTHIC';
+    position: relative;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+@font-face {
+    font-family: 'CENTURE GOTHIC';
+    src: url(../Fonts/GOTHIC.TTF);
+}
+@font-face {
+    font-family: 'SEGOES';
+    src: url(../Fonts/SEGOESC.TTF);
+}
+
+body {
+    padding-bottom: 50px;
+    background-color: #222;
+    color: white;
+    font-family: 'CENTURE GOTHIC';
+    background: no-repeat center center fixed;
+    background-image: url('../Images/background.jpg');
+    background-size: cover;
+}
+
+header {
+    text-align: center;
+    font-family: SEGOES;
+    font-size: 100px;
+}
+
+header a {
+    text-decoration: none;
+    color: white;
+}
+
+.Column {
+    float: left;
+}
+
+.DarkBackground {
+    background-color: rgba(34, 34, 34, 0.35);
+}
+
+.DIV100{
+    width: 100%;
+}
+
+/*label, input { display: block; }*/
+/*label { font-weight: bold; }*/
+/*input, .flexselect_dropdown li { font-size: 1em; }*/
+/*small { color: #999; }*/
+.flexselect_selected small { color: #ddd; }
+
+.text-center {
+    text-align:center;
+}
+footer {
+    width: 100%;
+    left: 0;
+    position: absolute;
+    bottom: 0px;
+    line-height: 25px;
+    text-align: center;
+    border-top: 1px solid #fff;
+    font-size: 20px;
+}

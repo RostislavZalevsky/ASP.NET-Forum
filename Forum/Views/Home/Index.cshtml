@@ -1,0 +1,12 @@
+﻿@if (ViewBag.SignIn != null && Convert.ToBoolean(ViewBag.SignIn))
+{
+    <header>@Html.ActionLink("Forum", "Index")</header>
+    @Html.Partial("_Home");
+}
+else
+{
+    <header>@Html.ActionLink("Welcome to Forum", "Index")</header>
+    @Html.Partial("_Authorization");
+    @Html.Partial("_Registration");
+    <br />
+}

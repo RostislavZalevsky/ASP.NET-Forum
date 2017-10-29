@@ -1,0 +1,83 @@
+﻿@using Forum.Models
+
+@{
+    ViewBag.Title = (ViewBag.Forum as Forum).Topic + " | ";
+}
+<div class="DarkBackground">
+    <div class="container">
+        <div class="right">@Html.ActionLink("BACK", "Index", "Home", null, new { @class = "button" })</div>
+        <div class="right"><a href="#NewMessage" class="button">New message</a></div>
+        <div class="left"><span style="font-size: 35px" class="topic">@((ViewBag.Forum as Forum).Topic)</span></div>
+        <div id="NewMessage" class="modalDialog">
+            <div>
+                <a href="#close" title="Close" class="close">&times;</a>
+                @using (Html.BeginForm("NewMessage", "Forum", FormMethod.Post, new { @class = "" }))
+            {
+                    <input name="topic" type="hidden" value="@((ViewBag.Forum as Forum).CodeForum)" />
+                    <input name="newtext" type="hidden" />
+                    <div id="NewText" name="NewText" class="text" contenteditable="true" placeholder="Enter a new message..."></div>
+                    @*@Html.TextArea("text", null, new { placeholder = "New message", @class = "" })*@
+                    <input id="Send" type="submit" value="Send" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+@foreach (var item in (ViewBag.Forum as Forum).Messages.OrderByDescending(p => p.DateCreated))
+{
+    <div class="DarkBackground">
+        <div class="text-center container" style="border-bottom: 1px solid white">
+            @if ((TempData["User"] as User) == item.User)
+            {
+                <a href="#EditMessage@(item.Id.ToString())" class="button right" style="font-size: 12px; height: 11px; line-height: 11px;">Edit this message</a>
+            }
+
+            @if (item.EditedMessages.Count() > 0)
+            {
+                <a href="#EditedMessage@(item.Id.ToString())" class="button right" style="font-size: 12px; height: 11px; line-height: 11px; font-weight: bold;" title="Show changed history message?">EDITED MESSAGE</a>
+            }
+            <div class="left">@item.User.Nickname @item.DateCreated</div>
+        </div>
+        <div style="padding: 15px; word-wrap:break-word;">@Html.Raw(item.Message1)</div>
+        @if ((TempData["User"] as User) == item.User)
+        {
+            <div id="EditMessage@(item.Id.ToString())" class="modalDialog">
+                <div>
+                    <a href="#close" title="Close" class="close">&times;</a>
+                    @using (Html.BeginForm("EditMessage", "Forum", FormMethod.Post, new { @class = "" }))
+                    {
+                        <input name="topic" type="hidden" value="@((ViewBag.Forum as Forum).CodeForum)" />
+                        <input name="MessageId" type="hidden" value="@item.Id" />
+                            <input name="edittext" type="hidden" value="@item.Message1" />
+                            <div id="EditText" class="text" contenteditable="true" placeholder="Enter the message to edit...">@Html.Raw(item.Message1)</div>
+                            @*@Html.TextArea("text", @item.Message1, new { placeholder = "Edit message" })*@
+                            <input id="Save" type="submit" value="Save" />
+                    }
+                </div>
+            </div>
+        }
+        @if (item.EditedMessages.Count() > 0)
+        {
+            <div id="EditedMessage@(item.Id.ToString())" class="modalDialog">
+                <div>
+                    <a href="#close" title="Close" class="close">&times;</a>
+                        <div class="text">
+                    @foreach (var edmess in item.EditedMessages.OrderByDescending(p => p.DateCreated))
+                    {
+                            <h3 class="text-center">@edmess.DateCreated</h3>
+                            <hr />
+                            <div>@Html.Raw(edmess.Message)</div>
+                            <hr/>
+                    }
+                        </div>
+                </div>
+            </div>
+        }
+    </div>
+    <br />
+}
+<div class="text-center" style="font-weight:bold;">
+    <span>Created by @((ViewBag.Forum as Forum).User.Nickname)</span>
+</div>
+<br />

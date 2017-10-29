@@ -1,0 +1,35 @@
+﻿@using Forum.Models
+@model RegistrationViewModel
+
+<div id="PersonalArea">
+    <div id="FormPersonalArea">
+        @using (Html.BeginForm("Registration", "Home", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <h1>Registration</h1>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div>
+                @Html.TextBoxFor(model => model.Login, new { placeholder = "Login" })<br style="clear: both;"/>
+                @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.TextBoxFor(model => model.Nickname, new { placeholder = "Nickname", })<br style="clear: both;" />
+                @Html.ValidationMessageFor(model => model.Nickname, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.PasswordFor(model => model.Password, new { placeholder = "Password" })<br style="clear: both;" />
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.PasswordFor(model => model.PasswordConfirm, new { placeholder = "Confirm password" })<br style="overflow: hidden;" />
+                @Html.ValidationMessageFor(model => model.PasswordConfirm, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.CheckBoxFor(model => model.Agree, new { style = "height: 15px;" })
+                @Html.LabelFor(model => model.Agree, new { style = "font-size: 15px;" })<br style="overflow: hidden;" />
+                @Html.ValidationMessageFor(model => model.Agree, "", new { @class = "text-danger" })
+            </div>
+            <input type="submit" value="Create account" />
+        }
+    </div>
+</div>

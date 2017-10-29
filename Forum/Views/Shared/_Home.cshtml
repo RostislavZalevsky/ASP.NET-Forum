@@ -1,0 +1,61 @@
+﻿@using Forum.Models;
+@{
+    var Forums = (ViewBag.Forums as List<Forum>);
+}
+        <div class="DarkBackground">
+            <div class="container">
+                <div class="right" style="text-align:left">
+                    @Html.ActionLink("Sign out", "SignOut", "Home", null, new { @class = "button", style = "text-align: center; width: 100%;" })
+                </div>
+                <div class="left">
+                    <label style="font-size: 35px">@((TempData["User"] as User).Nickname)</label>
+                </div>
+            </div>
+            @using (Html.BeginForm("NewForum", "Forum", FormMethod.Post, new { @class = "row" }))
+            {
+                <div class="text-center">
+                <select class="special-flexselect" id="Forums" name="Forums" tabindex="1" data-placeholder="Start typing a forum name...">
+                    <option></option>
+                    @{
+                        for (int i = 0; i < Forums.Count(); i++)
+                        {
+                            <option value="@(i + 1)">@(Forums[i].Topic)</option>
+                        }
+                    }
+                </select>
+                    <input id="TopicForum" type="submit" value="New forum or open" />
+                    @(Html.Hidden("topic", null, new { id = "topic" }))
+                </div>
+            }
+
+        </div>
+
+    <div class="DarkBackground">
+        @{
+            foreach (var item in Forums.Where(p => p.User == (TempData["User"] as User)))
+            {
+                <div class="container">
+                    @(Html.Label(item.DateCreated.ToString(), new { @class = "right" }))
+                    @(Html.ActionLink(item.Topic, "Index", "Forum", new { Topic = item.CodeForum }, new { @class = "left", style = "color: white; font-size: 20px; text-decoration: none;" }))
+                    @{
+                        if (item.Messages.Any())
+                        {
+                            var i = item.Messages.Where(p => p.Notifications.Any()).Count();
+                            if (i != null && i > 0)
+                            {
+                                @Html.Label(i.ToString(), new { @class = "left", style = "background-color: red; font-weight: bold" });
+                            }
+                        }
+                    }
+                </div>
+                @*<div>
+                    @if (item.Messages.Any())
+                    {
+                        @item.Messages.Last().User.Nickname
+                        @(Html.Raw(item.Messages.Last().Message1))
+                        @item.Messages.Last().DateCreated
+                    }
+                </div>*@
+            }
+        }
+    </div>

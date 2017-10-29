@@ -1,0 +1,176 @@
+﻿[contenteditable=true]:empty:before {
+    content: attr(placeholder);
+    display: block;
+}
+
+.text[contenteditable=true], .text {
+    max-height: 400px;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+#PersonalArea {
+    width: 300px;
+    margin: 0 auto;
+}
+
+#FormPersonalArea {
+    margin: 10px;
+    border: 0px solid #fff;
+    text-align: center;
+    background-color: rgba(34, 34, 34, 0.35);
+    color: #fff;
+}
+
+    #FormPersonalArea h1 {
+        font-size: 40px;
+        padding-top: 5px;
+        margin-bottom: 0px
+    }
+
+    #FormPersonalArea img {
+        max-height: 250px;
+        max-width: 250px;
+        font-size: 25px;
+    }
+
+input::-webkit-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    color: white;
+}
+
+input::-moz-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    color: white;
+}
+
+input:-moz-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    color: white;
+}
+
+input:-ms-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    color: white;
+}
+
+input:focus::-webkit-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+input:focus::-moz-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+input:focus:-moz-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+input:focus:-ms-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+input, label, .button {
+    font-size: 20px;
+}
+
+.button {
+    padding: 5px;
+}
+
+    .button:link {
+        border: 1px solid rgba(0,0,0,0);
+    }
+
+input[type=checkbox] {
+    margin: 5px;
+    height: 20px;
+    width: 20px;
+}
+
+input[type=text], input[type=password] {
+    margin: 2px;
+    border: .5px solid rgba(123, 123, 123, 0.5);
+    background-color: rgba(0, 0, 0, 0);
+    outline: none;
+    color: #fff;
+    height: 30px;
+    padding: 5px;
+}
+
+input:focus, .button:focus {
+    box-shadow: 0 0 5px #222;
+    border: 1px solid black;
+    outline: none;
+}
+
+input[type=submit], input[type=file], .button {
+    margin-bottom: 5px;
+    height: 50px;
+    width: 95%;
+    outline: 0;
+    border: 1px;
+    background-color: rgba(34,34,34,0.5);
+    font-size: 30px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+}
+
+input[type=file] {
+    max-width: 250px;
+    margin: 0 auto;
+    height: 25px;
+    font-size: 15px;
+}
+
+    input[type=submit]:active, input[type=submit]:hover, input[type=file]:active, input[type=file]:hover, .button:active, .button:hover {
+        border: 1px solid white;
+    }
+
+.text-danger {
+    color: rgb(255, 0, 0);
+}
+
+#TopicForum {
+    width: 99%;
+}
+
+#Forums_flexselect {
+    width: 98%;
+}
+
+.container {
+    padding: 10px;
+    height: auto;
+    overflow: hidden;
+}
+
+    .container .left {
+        float: none;
+        width: auto;
+        text-align: center;
+    }
+
+    .container .right {
+        width: 20%;
+        float: right;
+    }
+
+@media only screen and (max-width: 650px) {
+    #TopicForum {
+        width: 80%;
+    }
+
+    #Forums_flexselect {
+        width: 82%;
+    }
+}
